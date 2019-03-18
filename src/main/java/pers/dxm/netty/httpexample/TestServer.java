@@ -23,6 +23,7 @@ public class TestServer {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             // 链式编程模式，ServerBootstrap启动类绑定线程处理循环组EventLoopGroup对象，
             // 绑定处理管道NioServerSocketChannel，绑定管道中的处理器类（处理器类可以是自定义的）
+            // childhandler方法中的处理器处理的是workergroup中的请求，而handler方法处理的事bossgroup中的请求，因此这里用childhandler
             serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).
                     childHandler(new TestServerInitializer());
             // 设置服务端启动时绑定的端口号，返回ChannelFeature对象

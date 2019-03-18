@@ -29,7 +29,8 @@ public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObjec
             System.out.println("请求方法名：" + request.method().name());
             // 获取用户请求的uri，判断uri中是否包含favicon.icon
             URI uri = new URI(request.uri());
-            if ("/favicon.icon".equals(uri)) {
+            System.out.println(uri);
+            if ("/favicon.ico".equals(uri)) {
                 // 如果请求的是icon，直接跳出方法，不再返回response
                 System.out.println("请求的是icon");
                 return;
@@ -42,38 +43,52 @@ public class TestHttpServerHandler extends SimpleChannelInboundHandler<HttpObjec
             //设置response对象的头信息
             response.headers().set(HttpHeaderNames.CONTENT_TYPE, "text/plain");
             response.headers().set(HttpHeaderNames.CONTENT_LENGTH, content.readableBytes());
-            //调用writeandflush才会真正返回给客户端，如果调用write只能把响应放在缓冲区中并不会返回
+            // 调用writeandflush才会真正返回给客户端，如果调用write只能把响应放在缓冲区中并不会返回
             channelHandlerContext.writeAndFlush(response);
+            // 关闭channel连接，防止Http1.1时长时间占用
+            channelHandlerContext.channel().close();
         }
     }
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("handler added");
+        System.out.println("模拟handler added被回调");
         super.handlerAdded(ctx);
     }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channel registered");
+        System.out.println("模拟channel registered被回调");
         super.channelRegistered(ctx);
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channel active");
+        System.out.println("模拟channel active被回调");
         super.channelActive(ctx);
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channel inactive");
+        System.out.println("模拟channel inactive被回调");
         super.channelInactive(ctx);
     }
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
-        System.out.println("channel unregistered");
+        System.out.println("模拟channel unregistered被回调");
         super.channelUnregistered(ctx);
+    }
+
+    @Override
+    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+        System.out.println("模拟channel read被回调");
+        super.channelRead(ctx, msg);
+    }
+
+    @Override
+    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
+        System.out.println("模拟channel readcomplete被回调");
+        super.channelReadComplete(ctx);
     }
 }

@@ -26,6 +26,7 @@ public class MyServerHandler extends SimpleChannelInboundHandler<String> {
      */
     @Override
     public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+        // 打印异常信息
         cause.printStackTrace();
         ctx.close();
     }
