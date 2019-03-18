@@ -1,4 +1,4 @@
-package pers.dxm.netty.socketexample;
+package pers.dxm.netty.socket;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;

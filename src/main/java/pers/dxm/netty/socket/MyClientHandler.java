@@ -1,4 +1,4 @@
-package pers.dxm.netty.socketexample;
+package pers.dxm.netty.socket;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;

@@ -1,4 +1,4 @@
-package pers.dxm.netty.socketchat;
+package pers.dxm.netty.socket;
 
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -7,16 +7,19 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 
 /**
- * Created by douxm on 2019\3\18 0018.
+ * Created by IntelliJ IDEA.
+ * User: dxm
+ * Date: 2019\3\17 0017
+ * Time: 12:35
  */
-public class MyChatServer {
+public class MyServer {
     public static void main(String[] args) throws Exception {
         EventLoopGroup bossGroup = new NioEventLoopGroup();
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
             ServerBootstrap serverBootstrap = new ServerBootstrap();
             // 绑定线程组、管道、处理器
-            serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new MyChatServerInitializer());
+            serverBootstrap.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class).childHandler(new MyServerInitializer());
             // 绑定端口
             ChannelFuture channelFuture = serverBootstrap.bind(8899).sync();
             channelFuture.channel().closeFuture().sync();

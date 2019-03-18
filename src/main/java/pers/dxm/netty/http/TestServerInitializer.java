@@ -1,4 +1,4 @@
-package pers.dxm.netty.httpexample;
+package pers.dxm.netty.http;
 
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelPipeline;
