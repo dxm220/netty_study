@@ -28,7 +28,7 @@ public class NioTest11 {
         // 为每个端口绑定一个channel
         for (int i = 0; i < ports.length; ++i) {
             // 初始化channel对象
-            ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();、
+            ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
             // 将channel状态设置为非阻塞状态
             serverSocketChannel.configureBlocking(false);
             // 将channel与socket对象绑定并监听对应的端口号
