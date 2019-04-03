@@ -31,7 +31,7 @@ public class NioTest11 {
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
             // 将channel状态设置为非阻塞状态
             serverSocketChannel.configureBlocking(false);
-            // 将channel与socket对象绑定并监听对应的端口号
+            // 获取channel对应的socket对象并将channel与socket对象绑定，监听对应的端口号
             ServerSocket serverSocket = serverSocketChannel.socket();
             InetSocketAddress address = new InetSocketAddress(ports[i]);
             serverSocket.bind(address);
@@ -41,53 +41,47 @@ public class NioTest11 {
         }
 
         while (true) {
+            // 返回准备就绪的通道数，若没有符合条件的返回，select方法将一直阻塞
             int numbers = selector.select();
             System.out.println("numbers: " + numbers);
-
+            // 获取之前所有已经注册过的SelectionKey对象集合
             Set<SelectionKey> selectionKeys = selector.selectedKeys();
-
             System.out.println("selectedKeys: " + selectionKeys);
-
+            // 将获取到的集合进行遍历分类，根据不同类型的SelectionKey做不同的操作
             Iterator<SelectionKey> iter = selectionKeys.iterator();
 
             while (iter.hasNext()) {
                 SelectionKey selectionKey = iter.next();
-
                 if (selectionKey.isAcceptable()) {
+                    // 获取selectionKey为accept状态的channel
                     ServerSocketChannel serverSocketChannel = (ServerSocketChannel) selectionKey.channel();
+                    // 开启通道的连接
                     SocketChannel socketChannel = serverSocketChannel.accept();
                     socketChannel.configureBlocking(false);
-
+                    // 将channel从accept状态重新注册为read状态，即准备读取客户端发送的消息
                     socketChannel.register(selector, SelectionKey.OP_READ);
-                    // 每次对一个selectionKey操作完毕后，都要将其从iter中移除
+                    // 将iter中accept状态对应的selectionKey移除，否则该selectionKey将被重复获取，报空指针异常
                     iter.remove();
-
                     System.out.println("获得客户端连接： " + socketChannel);
                 } else if (selectionKey.isReadable()) {
                     SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
-
+                    // 获取到selectionKey为read状态的channel，并通过channel的buffer读取来自客户端的数据
                     int bytesRead = 0;
-
                     while (true) {
                         ByteBuffer byteBuffer = ByteBuffer.allocate(512);
-
                         byteBuffer.clear();
-
                         int read = socketChannel.read(byteBuffer);
-
                         if (read <= 0) {
                             break;
                         }
-
+                        // 读取完毕后翻转buffer状态
                         byteBuffer.flip();
-
+                        // channel再通过buffer将数据写出到此次io操作的目的地
                         socketChannel.write(byteBuffer);
-
                         bytesRead += read;
                     }
-
                     System.out.println("读取： " + bytesRead + "，来自于： " + socketChannel);
-
+                    // 清除对应状态为read的selectionKey
                     iter.remove();
                 }
             }
